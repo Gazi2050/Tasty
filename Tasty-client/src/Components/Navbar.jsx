@@ -12,19 +12,19 @@ const Navbar = () => {
                         </div>
                         <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 font-semibold">
                             <li><NavLink to={'/allRecipes'}>Recipes </NavLink></li>
-                            <li><NavLink to={'/addRecipes'}>Add-recipes</NavLink></li>
+                            <li><NavLink to={'/addRecipe'}>Add-recipes</NavLink></li>
                         </ul>
                     </div>
                     <Link to={'/'} className="btn btn-ghost text-3xl font-bold text-orange-600">Tasty</Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1 text-lg font-semibold">
-                        <li><NavLink to={'/recipes'}>Recipes </NavLink></li>
-                        <li><NavLink to={'/addRecipes'}>Add-recipes</NavLink></li>
+                        <li><NavLink to={'/allRecipes'}>Recipes </NavLink></li>
+                        <li><NavLink to={'/addRecipe'}>Add-recipes</NavLink></li>
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <button className="btn border-2 text-lg"><FcGoogle className="text-2xl" />LogIn</button>
+                    <button className="btn border-2 text-lg hover:bg-orange-100"><FcGoogle className="text-2xl" />LogIn</button>
                 </div>
             </div>
         </div>

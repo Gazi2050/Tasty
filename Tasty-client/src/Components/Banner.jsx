@@ -12,7 +12,7 @@ const Banner = () => {
                         <p className="mb-5">Dive into a world of culinary delight! Explore, share, and enjoy recipes from around the globe. Whether you're a seasoned chef or a kitchen newbie, there's something here for everyone.</p>
                         <div className="space-x-2">
                             <Link to={'/allRecipes'} className="btn bg-orange-600 text-white border-0 hover:bg-black hover:text-orange-600">See recipes </Link>
-                            <Link to={'/addRecipes'} className="btn bg-orange-600 text-white border-0 hover:bg-black hover:text-orange-600">Add recipes</Link>
+                            <Link to={'/addRecipe'} className="btn bg-orange-600 text-white border-0 hover:bg-black hover:text-orange-600">Add recipes</Link>
                         </div>
                     </div>
                 </div>
