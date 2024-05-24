@@ -7,7 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { RiCopperCoinLine } from "react-icons/ri";
 const Navbar = () => {
 
-    const { user, loading, googleSignIn, logOut } = useContext(AuthContext);
+    const { user, googleSignIn, logOut } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
@@ -117,10 +117,7 @@ const Navbar = () => {
                     }
                 </div>
             </div>
-            <Toaster
-                position="bottom-center"
-                reverseOrder={false}
-            />
+            <Toaster />
         </div>
     );
 };
