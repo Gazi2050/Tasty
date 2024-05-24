@@ -16,10 +16,11 @@ const DevInfo = () => {
         <div>
             <section className="bg-gray-900 text-white py-10">
                 <div className="container mx-auto px-6">
-                    <h1 className="text-3xl font-semibold text-orange-600 text-center mb-8">About the Developer</h1>
+                    <h1 className="text-2xl lg:text-3xl font-bold text-orange-600 text-center mb-8">About the Developer</h1>
 
                     <div className="flex flex-col lg:flex-row items-center lg:items-start">
-                        <img className="object-cover w-full lg:mx-6 lg:w-[25%] rounded-xl h-72 lg:h-96" src={img} alt="img" />
+                        <img className="object-cover w-full md:w-64 md:h-64 lg:mx-6 lg:w-[25%] rounded-xl h-72 lg:h-96" src={img} alt="img" />
+
 
                         <div className="lg:w-3/4">
                             <p className="text-lg text-orange-500 font-semibold mb-2">
@@ -68,12 +69,14 @@ const DevInfo = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <p className="text-lg text-orange-500 font-semibold mb-2">
-                                Experience : <span className='text-white text-sm font-normal'>{info.experience}</span>
-                            </p>
-                            <p className="text-lg text-orange-500 font-semibold mb-2">
-                                References : <span className='text-white text-sm font-normal'>{info.references}</span>
-                            </p>
+                            <div className="lg:w-3/4">
+                                <p className="text-lg text-orange-500 font-semibold mb-2">
+                                    Experience : <span className='text-white text-sm font-normal'>{info.experience}</span>
+                                </p>
+                                <p className="text-lg text-orange-500 font-semibold mb-2">
+                                    References : <span className='text-white text-sm font-normal'>{info.references}</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

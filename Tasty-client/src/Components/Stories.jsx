@@ -16,7 +16,7 @@ const Stories = () => {
     return (
         <div className="bg-black py-10 px-5">
             <div className="space-y-2">
-                <h1 className="text-center text-3xl font-bold text-orange-600">Success Stories</h1>
+                <h1 className="text-center text-2xl  lg:text-3xl font-bold text-orange-600">Success Stories</h1>
                 <p className="text-center text-sm font-medium text-white">Discover how our platform inspires culinary enthusiasts worldwide. Hear from our users as they share their kitchen adventures and culinary triumphs.</p>
             </div>
             <div className="lg:p-10 mt-5 lg:mt-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
