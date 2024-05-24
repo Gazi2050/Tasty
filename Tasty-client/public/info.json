@@ -1,0 +1,56 @@
+{
+    "name": "Gazi Nahian MD Abdullah",
+    "date_of_birth": "28 September, 2002",
+    "address": {
+        "street": "Uttar Salimpur, Faujdarhat",
+        "post_office": "Jaforabad-4317",
+        "police_station": "Sitakund",
+        "city": "Chittagong",
+        "country": "Bangladesh"
+    },
+    "contact": {
+        "mobile": "01671477918",
+        "email": "gazi45344@gmail.com"
+    },
+    "objective": "As a newcomer to web development, I'm keen to jumpstart my career in coding. I'm ready to apply my skills in HTML, CSS, JavaScript, and related areas, seeking to learn and contribute to a dynamic team. My goal is to grow as a developer and create meaningful solutions in a collaborative environment.",
+    "education": [
+        {
+            "degree": "Bachelor of Business Studies (BBS)",
+            "status": "Ongoing",
+            "institution": "Uttar Kattali Alhaj Mostafa Hakim Degree College",
+            "address": "Mostafa Hakim Degree College Road, Chattogram 4217"
+        },
+        {
+            "degree": "Higher Secondary Certificate (HSC)",
+            "year": 2022,
+            "institution": "Islamia Degree College",
+            "address": "178, DAROGAHAT ROAD, Sadarghat Rd, Chattogram 4000",
+            "gpa": 3.92
+        },
+        {
+            "degree": "Secondary School Certificate (SSC)",
+            "year": 2020,
+            "institution": "Kattali Nurul Haq Chowdhury High School",
+            "address": "Colonel Hat, Dhaka - Chittagong Hwy, Chattogram 4217",
+            "gpa": 3.94
+        }
+    ],
+    "skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "TypeScript",
+        "Tailwind CSS",
+        "Bootstrap",
+        "React",
+        "Next.js",
+        "MongoDB",
+        "Node.js",
+        "Express.js"
+    ],
+    "portfolio_website": "https://gazinahian.vercel.app",
+    "github": "https://github.com/Gazi2050",
+    "linkedin": "https://www.linkedin.com/in/gazi-nahian-92468727a",
+    "experience": "No experience yet.",
+    "references": "No reference yet."
+}
