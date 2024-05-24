@@ -62,27 +62,46 @@ async function run() {
             const page = parseInt(req.query.page) || 1;
             const category = req.query.category || "";
             const country = req.query.country || "";
+            const title = req.query.title || "";
             const limit = 3;
             let query = {};
+
             if (category) {
                 query.category = category;
             }
             if (country) {
-                query.country = { $regex: new RegExp(country, 'i') };
+                query.country = { $regex: new RegExp(country, "i") };
             }
-            const totalRecipes = await recipeCollection.countDocuments(query);
-            const totalPages = Math.ceil(totalRecipes / limit);
-            if (page > totalPages) {
-                return res.status(404).json({ message: "Page not found" });
+            if (title) {
+                query.recipeName = { $regex: new RegExp(title, "i") };
             }
-            const startIndex = (page - 1) * limit;
-            const cursor = recipeCollection.find(query).skip(startIndex).limit(limit);
-            const result = await cursor.toArray();
-            res.json({
-                recipes: result,
-                totalPages: totalPages
-            });
+
+            console.log("Query parameters received:", { page, category, country, title });
+            console.log("Constructed MongoDB query:", query);
+
+            try {
+                const totalRecipes = await recipeCollection.countDocuments(query);
+                const totalPages = Math.ceil(totalRecipes / limit);
+
+                if (page > totalPages) {
+                    return res.status(404).json({ message: "Page not found" });
+                }
+                const startIndex = (page - 1) * limit;
+                const cursor = recipeCollection.find(query).skip(startIndex).limit(limit);
+                const result = await cursor.toArray();
+
+                console.log("Recipes found:", result.length);
+
+                res.json({
+                    recipes: result,
+                    totalPages: totalPages
+                });
+            } catch (error) {
+                console.error('Error fetching recipes:', error);
+                res.status(500).json({ message: 'Internal server error' });
+            }
         });
+
 
         app.get('/recipes/:id', async (req, res) => {
             const id = req.params.id;
