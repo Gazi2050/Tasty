@@ -75,10 +75,8 @@ async function run() {
             if (title) {
                 query.recipeName = { $regex: new RegExp(title, "i") };
             }
-
             console.log("Query parameters received:", { page, category, country, title });
             console.log("Constructed MongoDB query:", query);
-
             try {
                 const totalRecipes = await recipeCollection.countDocuments(query);
                 const totalPages = Math.ceil(totalRecipes / limit);
