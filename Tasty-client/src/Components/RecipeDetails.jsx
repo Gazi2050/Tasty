@@ -1,11 +1,24 @@
 import { useState, useEffect, useContext } from 'react';
-import { useLoaderData, useNavigate, Link } from 'react-router-dom';
+import { useLoaderData, Link } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
-
+import { FaUserFriends } from 'react-icons/fa';
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import { BiLike, BiDislike, BiSolidLike, BiSolidDislike } from "react-icons/bi";
+import toast from 'react-hot-toast';
 const RecipeDetails = () => {
     const recipe = useLoaderData();
     const { user } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const axiosPublic = useAxiosPublic()
+    const axiosSecure = useAxiosSecure()
+    const { data: recipes = [], refetch, } = useQuery({
+        queryKey: ['recipes'],
+        queryFn: async () => {
+            const res = await axiosPublic.get('/recipes');
+            return res.data;
+        }
+    })
     const { _id, creatorEmail, watchCount, purchased_by, recipeName, recipeDetails, category, country, videoLink, img } = recipe;
 
     let embedUrl = '';
@@ -64,6 +77,50 @@ const RecipeDetails = () => {
         setLoading(false);
     }, [category, country]);
 
+
+
+    const handleLike = async (_id) => {
+        try {
+            const email = user.email;
+            const UpdateRecipe = {
+                email
+            };
+            const response = await axiosSecure.put(`/like/${_id}`, UpdateRecipe);
+            const data = await response.data;
+
+            console.log(data);
+            if (data.modifiedCount) {
+                refetch()
+            } else {
+                toast.error('Failed to like');
+            }
+        } catch (error) {
+            console.error('Error updating recipe:', error);
+            toast.error('Error updating recipe:', error)
+        }
+    };
+    const handleDisLike = async (_id) => {
+        try {
+            const email = user.email;
+            const UpdateRecipe = {
+                email
+            };
+            const response = await axiosSecure.put(`/disLike/${_id}`, UpdateRecipe);
+            const data = await response.data;
+
+            console.log(data);
+            if (data.modifiedCount) {
+                refetch()
+            } else {
+                toast.error('Failed to disLike');
+            }
+        } catch (error) {
+            console.error('Error updating recipe:', error);
+            toast.error('Error updating recipe:', error)
+        }
+    };
+
+
     return (
         <div className="container mx-auto p-4 bg-black text-white">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -87,12 +144,14 @@ const RecipeDetails = () => {
                             <span className="font-semibold text-orange-500">Watch Count : </span>{watchCount}
                         </div>
                         <div className="text-lg mb-4">
-                            <span className="font-semibold text-orange-500">Purchased By : </span>{purchased_by.length} users
+                            <div className="flex justify-start items-center space-x-2">
+                                <p className='font-semibold text-orange-500'>Purchased By :</p> <span className="font-medium">{purchased_by.length}</span> <FaUserFriends className="text-xl text-orange-400" />
+                            </div>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center mb-4">
-                        <button className="bg-green-500 text-white px-4 py-2 rounded-md mr-2">Like </button>
-                        <button className="bg-red-500 text-white px-4 py-2 rounded-md">Dislike</button>
+                    <div className="flex justify-center items-center mb-4 space-x-2">
+                        <button onClick={() => handleLike(_id)} className="text-green-500 btn btn-outline text-3xl"><BiLike /> <span className='text-xl font-bold'>10</span></button>
+                        <button onClick={() => handleDisLike(_id)} className="text-red-500 btn btn-outline text-3xl"><BiDislike /> <span className='text-xl font-bold'>10</span></button>
                     </div>
                     {embedUrl ? (
                         <div className="w-full h-56 lg:h-80">
@@ -134,6 +193,12 @@ const RecipeDetails = () => {
                                                     <p className="text-sm text-orange-600 font-medium">{recipe.country}</p>
                                                     <Link to={`/recipeDetails/${recipe._id}`} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</Link>
                                                 </div>
+                                                <div className="text-sm text-gray-500">
+                                                    <p>author : <span className="font-medium">{recipe.creatorEmail}</span></p>
+                                                    <div className="flex justify-start items-center space-x-1">
+                                                        <p>Purchased By :</p> <span className="font-medium">{recipe.purchased_by.length}</span> <FaUserFriends className="text-lg" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -156,6 +221,12 @@ const RecipeDetails = () => {
                                                 <div className="flex justify-between items-center">
                                                     <p className="text-sm text-orange-600 font-medium">{recipe.country}</p>
                                                     <Link to={`/recipeDetails/${recipe._id}`} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</Link>
+                                                </div>
+                                                <div className="text-sm text-gray-500">
+                                                    <p>author : <span className="font-medium">{recipe.creatorEmail}</span></p>
+                                                    <div className="flex justify-start items-center space-x-1">
+                                                        <p>Purchased By :</p> <span className="font-medium">{recipe.purchased_by.length}</span> <FaUserFriends className="text-lg" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

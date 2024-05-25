@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-
+import { FaUserFriends } from "react-icons/fa";
 const AllRecipes = () => {
     const [recipes, setRecipes] = useState([]);
     const [page, setPage] = useState(1);
@@ -103,12 +103,19 @@ const AllRecipes = () => {
                                     <h2 className="text-xl font-bold mb-1">{recipe.recipeName}</h2>
                                     <p className="mb-1 text-sm text-gray-400">{recipe.category}</p>
                                     <p className="text-sm font-medium text-gray-600 mb-4 line-clamp-3">{recipe.recipeDetails}</p>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex justify-between items-center mb-2">
                                         <p className="text-sm text-orange-600 font-medium">{recipe.country}</p>
                                         <Link to={`/recipeDetails/${recipe._id}`} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</Link>
                                     </div>
+                                    <div className="text-sm text-gray-500">
+                                        <p>author : <span className="font-medium">{recipe.creatorEmail}</span></p>
+                                        <div className="flex justify-start items-center space-x-1">
+                                            <p>Purchased By :</p> <span className="font-medium">{recipe.purchased_by.length}</span> <FaUserFriends className="text-lg" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                         ))}
                     </div>
                 )}

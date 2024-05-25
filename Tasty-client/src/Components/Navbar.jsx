@@ -93,7 +93,11 @@ const Navbar = () => {
                     <ul className="menu menu-horizontal px-1 text-lg font-semibold space-x-1">
                         <li><NavLink to={'/'}>Home </NavLink></li>
                         <li><NavLink to={'/allRecipes'}>Recipes </NavLink></li>
-                        <li><NavLink to={'/addRecipe'}>Add-recipes</NavLink></li>
+                        {user ?
+                            (<li><NavLink to={'/addRecipe'}>Add-recipes</NavLink></li>)
+                            :
+                            (null)
+                        }
                     </ul>
                 </div>
                 <div className="navbar-end">

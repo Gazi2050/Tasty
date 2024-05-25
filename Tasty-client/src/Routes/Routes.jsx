@@ -5,6 +5,8 @@ import Home from "../Components/Home";
 import AllRecipes from "../Components/AllRecipes";
 import AddRecipe from "../Components/AddRecipe";
 import RecipeDetails from "../Components/RecipeDetails";
+import PrivateRoute from "./PrivateRoute";
+import PurchaseCoin from "../Components/PurchaseCoin";
 
 export const router = createBrowserRouter([
     {
@@ -22,12 +24,16 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/recipeDetails/:id',
-                element: <RecipeDetails />,
+                element: <PrivateRoute><RecipeDetails /></PrivateRoute>,
                 loader: ({ params }) => fetch(`http://localhost:5000/recipes/${params.id}`) //
             },
             {
                 path: '/addRecipe',
-                element: <AddRecipe />
+                element: <PrivateRoute><AddRecipe /></PrivateRoute>
+            },
+            {
+                path: '/purchaseCoin',
+                element: <PrivateRoute><PurchaseCoin /></PrivateRoute>
             },
         ]
     },
