@@ -4,6 +4,7 @@ import ErrorElement from "../Components/ErrorElement";
 import Home from "../Components/Home";
 import AllRecipes from "../Components/AllRecipes";
 import AddRecipe from "../Components/AddRecipe";
+import RecipeDetails from "../Components/RecipeDetails";
 
 export const router = createBrowserRouter([
     {
@@ -18,6 +19,11 @@ export const router = createBrowserRouter([
             {
                 path: '/allRecipes',
                 element: <AllRecipes />
+            },
+            {
+                path: '/recipeDetails/:id',
+                element: <RecipeDetails />,
+                loader: ({ params }) => fetch(`http://localhost:5000/recipes/${params.id}`) //
             },
             {
                 path: '/addRecipe',
