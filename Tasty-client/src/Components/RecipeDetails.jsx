@@ -2,30 +2,14 @@ import { useState, useEffect, useContext } from 'react';
 import { useLoaderData, Link } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 import { FaUserFriends } from 'react-icons/fa';
-import useAxiosPublic from "../Hooks/useAxiosPublic";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
 import { BiLike, BiDislike, BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import toast from 'react-hot-toast';
 const RecipeDetails = () => {
     const recipe = useLoaderData();
     const { user } = useContext(AuthContext);
-    const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
-    const { data: recipesResponse = {}, refetch } = useQuery({
-        queryKey: ['recipes'],
-        queryFn: async () => {
-            const res = await axiosPublic.get('/recipes');
-            return res.data;
-        }
-    });
-
-
-    const recipes = Array.isArray(recipesResponse.recipes) ? recipesResponse.recipes : [];
-
-    const { _id, creatorEmail, watchCount, purchased_by, recipeName, recipeDetails, category, country, videoLink, img } = recipe;
-
-    const currentRecipe = recipes.find(r => r._id === _id);
+    const { _id, creatorEmail, watchCount, purchased_by, recipeName, recipeDetails, category, country, videoLink, img, like, disLike } = recipe;
 
     let embedUrl = '';
     const extractVideoId = (url) => {
@@ -96,7 +80,7 @@ const RecipeDetails = () => {
 
             console.log(data);
             if (data.modifiedCount) {
-                refetch()
+                window.location.reload();
             } else {
                 toast.error('Failed to like');
             }
@@ -116,7 +100,7 @@ const RecipeDetails = () => {
 
             console.log(data);
             if (data.modifiedCount) {
-                refetch()
+                window.location.reload();
             } else {
                 toast.error('Failed to disLike');
             }
@@ -156,15 +140,15 @@ const RecipeDetails = () => {
                         </div>
                     </div>
                     <div className="flex justify-center items-center mb-4 space-x-2">
-                        {currentRecipe?.like?.some(vote => vote?.email === user?.email) ?
-                            (<button className="text-green-500 btn btn-outline text-3xl bg-green-200 bg-opacity-40"><BiSolidLike /> <span className='text-xl font-bold text-orange-400'>{currentRecipe?.like?.length}</span></button>)
+                        {like?.some(vote => vote?.email === user?.email) ?
+                            (<button className="text-green-500 btn btn-outline text-3xl bg-green-200 bg-opacity-40"><BiSolidLike /> <span className='text-xl font-bold text-orange-400'>{like?.length || 0}</span></button>)
                             :
-                            (<button onClick={() => handleLike(_id)} className="text-green-500 btn btn-outline text-3xl"><BiLike /> <span className='text-xl font-bold'>{currentRecipe?.like?.length}</span></button>)
+                            (<button onClick={() => handleLike(_id)} className="text-green-500 btn btn-outline text-3xl"><BiLike /> <span className='text-xl font-bold'>{like?.length || 0}</span></button>)
                         }
-                        {currentRecipe?.disLike?.some(vote => vote?.email === user?.email) ?
-                            (<button className="text-red-500 btn btn-outline text-3xl bg-red-200 bg-opacity-40"><BiSolidDislike /> <span className='text-xl font-bold text-orange-400'>{currentRecipe?.disLike?.length}</span></button>)
+                        {disLike?.some(vote => vote?.email === user?.email) ?
+                            (<button className="text-red-500 btn btn-outline text-3xl bg-red-200 bg-opacity-40"><BiSolidDislike /> <span className='text-xl font-bold text-orange-400'>{disLike?.length || 0}</span></button>)
                             :
-                            (<button onClick={() => handleDisLike(_id)} className="text-red-500 btn btn-outline text-3xl"><BiDislike /> <span className='text-xl font-bold'>{currentRecipe?.disLike?.length}</span></button>)
+                            (<button onClick={() => handleDisLike(_id)} className="text-red-500 btn btn-outline text-3xl"><BiDislike /> <span className='text-xl font-bold'>{disLike?.length || 0}</span></button>)
                         }
                     </div>
                     {embedUrl ? (

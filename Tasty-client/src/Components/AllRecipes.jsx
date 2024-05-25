@@ -1,8 +1,11 @@
 import axios from "axios";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useContext } from "react";
+import { AuthContext } from "../Provider/AuthProvider";
 import { Link } from "react-router-dom";
 import { FaUserFriends } from "react-icons/fa";
+import toast, { Toaster } from "react-hot-toast";
 const AllRecipes = () => {
+    const { user } = useContext(AuthContext);
     const [recipes, setRecipes] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -52,6 +55,10 @@ const AllRecipes = () => {
         setPage(1);
         setRecipes([]);
         setNoResults(false);
+    };
+
+    const showToast = (message) => {
+        toast.error(message);
     };
 
     return (
@@ -120,6 +127,7 @@ const AllRecipes = () => {
                     </div>
                 )}
             </div>
+            <Toaster />
         </div>
     );
 };
