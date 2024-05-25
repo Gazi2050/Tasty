@@ -1,7 +1,7 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -27,6 +27,75 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        //Collections
+        const userCollection = client.db('tasty').collection('users');
+        const recipeCollection = client.db('tasty').collection('recipes');
+
+        // user related api
+        app.get('/allUsers', async (req, res) => {
+            const result = await userCollection.find().toArray();
+            res.send(result);
+        })
+
+        app.get('/users', async (req, res) => {
+            let query = {};
+            if (req.query?.email) {
+                query = { email: req.query.email }
+            }
+            const result = await userCollection.findOne(query);
+            res.send(result);
+        });
+
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const query = { email: user.email };
+            const existingUser = await userCollection.findOne(query);
+            if (existingUser) {
+                return res.send({ message: 'user already exist', insertedId: null })
+            }
+            const result = await userCollection.insertOne(user);
+            res.send(result);
+        })
+
+        // recipe related api
+        app.get('/recipes', async (req, res) => {
+            const page = parseInt(req.query.page) || 1;
+            const category = req.query.category || "";
+            const country = req.query.country || "";
+            const limit = 3;
+            let query = {};
+            if (category) {
+                query.category = category;
+            }
+            if (country) {
+                query.country = { $regex: new RegExp(country, 'i') };
+            }
+            const totalRecipes = await recipeCollection.countDocuments(query);
+            const totalPages = Math.ceil(totalRecipes / limit);
+            if (page > totalPages) {
+                return res.status(404).json({ message: "Page not found" });
+            }
+            const startIndex = (page - 1) * limit;
+            const cursor = recipeCollection.find(query).skip(startIndex).limit(limit);
+            const result = await cursor.toArray();
+            res.json({
+                recipes: result,
+                totalPages: totalPages
+            });
+        });
+
+        app.get('/recipes/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await recipeCollection.findOne(query);
+            res.send(result);
+        })
+
+        app.post('/recipes', async (req, res) => {
+            const recipe = req.body;
+            const result = await recipeCollection.insertOne(recipe);
+            res.send(result);
+        });
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
@@ -41,7 +110,9 @@ run().catch(console.dir);
 app.get('/', (req, res) => {
     res.send(`
     <h1 style="text-align:center;font-family:Monospace;">Tasty Server Is Running...</h1>
-    `)
+    <h2 style="text-align:center;font-family:Monospace;"><a href='http://localhost:5000/allUsers'>allUsers</a></h2>
+    <h2 style="text-align:center;font-family:Monospace;"><a href='http://localhost:5000/users'>users</a></h2>
+    <h2 style="text-align:center;font-family:Monospace;"><a href='http://localhost:5000/recipes'>recipes</a></h2>`)
 })
 
 app.listen(port, () => {
