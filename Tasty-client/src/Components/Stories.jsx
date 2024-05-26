@@ -7,24 +7,31 @@ const Stories = () => {
     const [totalRecipe, setTotalRecipe] = useState(0);
 
     useEffect(() => {
+        const token = localStorage.getItem('access-token');
+
         fetch('stories.json')
             .then(res => res.json())
             .then(data => {
                 setStories(data);
             });
 
-        fetch('https://tasty-server.vercel.app/allUsers')
+        fetch('https://tasty-server.vercel.app/users')
             .then(res => res.json())
             .then(data => {
                 setTotalUser(data.length);
             });
 
-        fetch('https://tasty-server.vercel.app/recipes')
+        fetch('https://tasty-server.vercel.app/recipes', {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
             .then(res => res.json())
             .then(data => {
                 setTotalRecipe(data.totalPages * 3);
             });
     }, []);
+
 
     return (
         <div className="bg-black py-10 px-5">
