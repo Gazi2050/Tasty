@@ -13,13 +13,13 @@ const Stories = () => {
                 setStories(data);
             });
 
-        fetch('http://localhost:5000/allUsers')
+        fetch('https://tasty-server.vercel.app/allUsers')
             .then(res => res.json())
             .then(data => {
                 setTotalUser(data.length);
             });
 
-        fetch('http://localhost:5000/recipes')
+        fetch('https://tasty-server.vercel.app/recipes')
             .then(res => res.json())
             .then(data => {
                 setTotalRecipe(data.totalPages * 3);

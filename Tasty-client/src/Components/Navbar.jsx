@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import toast, { Toaster } from "react-hot-toast";
 import { RiCopperCoinLine } from "react-icons/ri";
+import Swal from "sweetalert2";
 const Navbar = () => {
 
     const { user, googleSignIn, logOut } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const Navbar = () => {
 
     useEffect(() => {
         if (user?.email) {
-            const url = `http://localhost:5000/users?email=${user.email}`;
+            const url = `https://tasty-server.vercel.app/allUsers/${user.email}`;
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
@@ -36,20 +37,29 @@ const Navbar = () => {
                     displayName: googleUser?.displayName,
                     photoURL: googleUser?.photoURL,
                     email: googleUser?.email,
-                    coin: 50
-                }
+                    coin: parseInt(50, 10)
+                };
                 axiosPublic.post('/users', userInfo)
                     .then(res => {
                         console.log(res.data);
-                        toast.success(`Logged in as ${googleUser.displayName}`);
-                        navigate(from, { replace: true })
-                    })
+                        Swal.fire({
+                            title: 'Success!',
+                            text: `Logged in as ${googleUser.email}. Congratulations on earning 50 coins!`,
+                            icon: 'success',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload()
+                            navigate(from, { replace: true });
+                        });
+                    });
             })
             .catch((error) => {
                 const errorMessage = error.message;
-                console.log(errorMessage)
-            })
-    }
+                console.log(errorMessage);
+                toast.error(errorMessage)
+            });
+    };
 
     const handleLogOut = () => {
         logOut()

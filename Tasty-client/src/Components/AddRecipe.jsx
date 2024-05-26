@@ -34,7 +34,6 @@ const AddRecipe = () => {
                 img: res.data.data.display_url
             }
             const recipeRes = await axiosSecure.post('/recipes', recipeItem);
-            //console.log(eventRes.data)
             if (recipeRes.data.insertedId) {
                 reset();
                 toast.success('Recipe added successfully');

@@ -7,6 +7,7 @@ import AddRecipe from "../Components/AddRecipe";
 import RecipeDetails from "../Components/RecipeDetails";
 import PrivateRoute from "./PrivateRoute";
 import PurchaseCoin from "../Components/PurchaseCoin";
+import Payment from "../Components/Payment";
 
 export const router = createBrowserRouter([
     {
@@ -25,7 +26,7 @@ export const router = createBrowserRouter([
             {
                 path: '/recipeDetails/:id',
                 element: <PrivateRoute><RecipeDetails /></PrivateRoute>,
-                loader: ({ params }) => fetch(`http://localhost:5000/recipes/${params.id}`) //
+                loader: ({ params }) => fetch(`https://tasty-server.vercel.app/recipes/${params.id}`)
             },
             {
                 path: '/addRecipe',
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
             {
                 path: '/purchaseCoin',
                 element: <PrivateRoute><PurchaseCoin /></PrivateRoute>
+            },
+            {
+                path: '/payment',
+                element: <PrivateRoute><Payment /></PrivateRoute>
             },
         ]
     },

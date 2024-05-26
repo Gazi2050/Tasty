@@ -38,7 +38,7 @@ const RecipeDetails = () => {
 
     const fetchSameCategoryRecipes = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/recipes?category=${category}`);
+            const response = await fetch(`https://tasty-server.vercel.app/recipes?category=${category}`);
             const data = await response.json();
             const filteredRecipes = data.recipes.filter(recipe => recipe._id !== _id);
             setSameCategoryRecipes(filteredRecipes);
@@ -50,7 +50,7 @@ const RecipeDetails = () => {
 
     const fetchSameCountryRecipes = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/recipes?country=${country}`);
+            const response = await fetch(`https://tasty-server.vercel.app/recipes?country=${country}`);
             const data = await response.json();
             const filteredRecipes = data.recipes.filter(recipe => recipe._id !== _id);
             setSameCountryRecipes(filteredRecipes);

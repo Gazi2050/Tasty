@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState, useEffect, useCallback, useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUserFriends } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
+import Swal from "sweetalert2";
 const AllRecipes = () => {
     const { user } = useContext(AuthContext);
     const [recipes, setRecipes] = useState([]);
@@ -11,11 +12,12 @@ const AllRecipes = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [filters, setFilters] = useState({ category: "All", country: "", title: "" });
     const [noResults, setNoResults] = useState(false);
+    const navigate = useNavigate()
 
     const fetchData = useCallback(async () => {
         try {
             console.log("Fetching data with:", { page, ...filters });
-            const { data } = await axios.get(`http://localhost:5000/recipes`, {
+            const { data } = await axios.get(`https://tasty-server.vercel.app/recipes`, {
                 params: {
                     page,
                     category: filters.category === "All" ? "" : filters.category,
@@ -57,9 +59,51 @@ const AllRecipes = () => {
         setNoResults(false);
     };
 
-    const showToast = (message) => {
-        toast.error(message);
+    const handlePurchase = async (recipeId) => {
+        try {
+            // Check if there is a user logged in
+            if (!user) {
+                toast.error('Please log in');
+                navigate('/');
+                return;
+            }
+            const userResponse = await axios.get(`https://tasty-server.vercel.app/allUsers/${user.email}`);
+            const userData = userResponse.data;
+
+            if (userData.coin < 10) {
+                toast.error('You need to purchase more coins to buy this recipe');
+                navigate('/purchaseCoin');
+                return;
+            }
+            console.log(userData.coin);
+            const confirmPermission = await Swal.fire({
+                title: 'Confirm Purchase',
+                text: `Are you sure you want to purchase this recipe? It will cost 10 coins.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, purchase it'
+            });
+
+            if (!confirmPermission.isConfirmed) return;
+            const response = await axios.put(`https://tasty-server.vercel.app/purchase/${recipeId}`, { email: user.email });
+            console.log('Updated data after recipe purchase:', response.data);
+            Swal.fire({
+                title: 'Success!',
+                text: 'Recipe purchased successfully',
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                navigate(`/recipeDetails/${recipeId}`);
+            });
+        } catch (error) {
+            console.error('Error purchasing recipe:', error);
+            toast.error('Failed to purchase recipe');
+        }
     };
+
 
     return (
         <div className="bg-black text-white min-h-screen">
@@ -112,7 +156,11 @@ const AllRecipes = () => {
                                     <p className="text-sm font-medium text-gray-600 mb-4 line-clamp-3">{recipe.recipeDetails}</p>
                                     <div className="flex justify-between items-center mb-2">
                                         <p className="text-sm text-orange-600 font-medium">{recipe.country}</p>
-                                        <Link to={`/recipeDetails/${recipe._id}`} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</Link>
+                                        {user?.email === recipe?.creatorEmail || recipe?.purchased_by.includes(user?.email) ? (
+                                            <Link to={`/recipeDetails/${recipe._id}`} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</Link>
+                                        ) : (
+                                            <button onClick={() => handlePurchase(recipe._id)} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</button>
+                                        )}
                                     </div>
                                     <div className="text-sm text-gray-500">
                                         <p>author : <span className="font-medium">{recipe.creatorEmail}</span></p>
