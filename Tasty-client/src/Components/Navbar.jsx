@@ -39,27 +39,52 @@ const Navbar = () => {
                     email: googleUser?.email,
                     coin: parseInt(50, 10)
                 };
-                axiosPublic.post('/users', userInfo)
+
+                // Check if the user already exists
+                axiosPublic.get(`/users/${googleUser.email}`)
                     .then(res => {
-                        console.log(res.data);
-                        Swal.fire({
-                            title: 'Success!',
-                            text: `Logged in as ${googleUser.email}. Congratulations on earning 50 coins!`,
-                            icon: 'success',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.reload()
-                            navigate(from, { replace: true });
-                        });
+                        if (res.data) {
+                            // User exists, show Welcome Back message
+                            Swal.fire({
+                                title: 'Welcome Back!',
+                                text: `Logged in as ${googleUser.email}. Welcome back!`,
+                                icon: 'success',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.reload();
+                                navigate(from, { replace: true });
+                            });
+                        } else {
+                            // User does not exist, create the user and show Congratulations message
+                            axiosPublic.post('/users', userInfo)
+                                .then(res => {
+                                    console.log(res.data);
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: `Logged in as ${googleUser.email}. Congratulations on earning 50 coins!`,
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        confirmButtonText: 'OK'
+                                    }).then(() => {
+                                        window.location.reload();
+                                        navigate(from, { replace: true });
+                                    });
+                                });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Error checking user existence: ", error.message);
+                        toast.error("Error checking user existence.");
                     });
             })
             .catch((error) => {
                 const errorMessage = error.message;
                 console.log(errorMessage);
-                toast.error(errorMessage)
+                toast.error(errorMessage);
             });
     };
+
 
     const handleLogOut = () => {
         logOut()

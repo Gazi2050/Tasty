@@ -1,34 +1,12 @@
 import { useEffect, useState } from "react";
-import CountUp from 'react-countup';
-
 const Stories = () => {
     const [stories, setStories] = useState([]);
-    const [totalUser, setTotalUser] = useState(0);
-    const [totalRecipe, setTotalRecipe] = useState(0);
 
     useEffect(() => {
-        const token = localStorage.getItem('access-token');
-
         fetch('stories.json')
             .then(res => res.json())
             .then(data => {
                 setStories(data);
-            });
-
-        fetch('https://tasty-server.vercel.app/users')
-            .then(res => res.json())
-            .then(data => {
-                setTotalUser(data.length);
-            });
-
-        fetch('https://tasty-server.vercel.app/recipes', {
-            headers: {
-                authorization: `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
-            .then(data => {
-                setTotalRecipe(data.totalPages * 3);
             });
     }, []);
 
@@ -58,17 +36,7 @@ const Stories = () => {
                     </div>
                 ))}
             </div>
-            <div className="flex justify-center items-center mt-8">
-                <div>
-                    <p className="text-center text-white font-medium text-6xl"><CountUp end={totalRecipe} duration={5} /></p>
-                    <p className="text-center font-medium text-xl text-orange-600">Recipes</p>
-                </div>
-                <div className="divider divider-horizontal divider-primary"></div>
-                <div>
-                    <p className="text-center text-white font-medium text-6xl"><CountUp end={totalUser} duration={5} /></p>
-                    <p className="text-center font-medium text-xl text-orange-600">Users</p>
-                </div>
-            </div>
+
         </div>
     );
 };
