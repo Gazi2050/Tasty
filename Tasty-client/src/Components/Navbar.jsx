@@ -32,7 +32,6 @@ const Navbar = () => {
         googleSignIn()
             .then(result => {
                 const googleUser = result.user;
-                console.log(googleUser);
                 const userInfo = {
                     displayName: googleUser?.displayName,
                     photoURL: googleUser?.photoURL,
@@ -81,7 +80,6 @@ const Navbar = () => {
         logOut()
             .then(result => {
                 toast.success("User LogOut Successfully")
-                console.log(result)
                 navigate('/');
             })
             .catch((error) => {

@@ -77,8 +77,6 @@ const RecipeDetails = () => {
             };
             const response = await axiosSecure.put(`/like/${_id}`, UpdateRecipe);
             const data = await response.data;
-
-            console.log(data);
             if (data.modifiedCount) {
                 window.location.reload();
             } else {
@@ -97,8 +95,6 @@ const RecipeDetails = () => {
             };
             const response = await axiosSecure.put(`/disLike/${_id}`, UpdateRecipe);
             const data = await response.data;
-
-            console.log(data);
             if (data.modifiedCount) {
                 window.location.reload();
             } else {
@@ -177,7 +173,7 @@ const RecipeDetails = () => {
                         <div>
                             <h4 className="text-lg font-semibold mb-2">Similar Recipes in the Same Category</h4>
                             {error || sameCategoryRecipes.length === 0 ? (
-                                <h1>No matching category suggestions found.</h1>
+                                <h1 className='text-red-500 text-sm'>No matching category suggestions found.</h1>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {sameCategoryRecipes.map((recipe) => (
@@ -206,7 +202,7 @@ const RecipeDetails = () => {
                         <div className="mt-8">
                             <h4 className="text-lg font-semibold mb-2">Similar Recipes from the Same Country</h4>
                             {error || sameCountryRecipes.length === 0 ? (
-                                <h1>No matching country suggestions found.</h1>
+                                <h1 className='text-red-500 text-sm'>No matching country suggestions found.</h1>
                             ) : (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {sameCountryRecipes.map((recipe) => (

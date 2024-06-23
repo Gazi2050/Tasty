@@ -91,7 +91,7 @@ const CheckoutForm = () => {
                     });
                     refetch();
                     navigate('/allRecipes')
-                    window.location.reload()
+                    // window.location.reload()
                 }
 
             }

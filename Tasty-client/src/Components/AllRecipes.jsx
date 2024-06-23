@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaUserFriends } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 import Swal from "sweetalert2";
+
 const AllRecipes = () => {
     const { user } = useContext(AuthContext);
     const [recipes, setRecipes] = useState([]);
@@ -12,11 +13,10 @@ const AllRecipes = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [filters, setFilters] = useState({ category: "All", country: "", title: "" });
     const [noResults, setNoResults] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const fetchData = useCallback(async () => {
         try {
-            console.log("Fetching data with:", { page, ...filters });
             const { data } = await axios.get(`https://tasty-server.vercel.app/recipes`, {
                 params: {
                     page,
@@ -26,7 +26,6 @@ const AllRecipes = () => {
                 }
             });
             const { recipes: newRecipes, totalPages: newTotalPages } = data;
-
             setNoResults(newRecipes.length === 0);
             setRecipes(prevRecipes => page === 1 ? newRecipes : [...prevRecipes, ...newRecipes]);
             setTotalPages(newTotalPages);
@@ -61,21 +60,18 @@ const AllRecipes = () => {
 
     const handlePurchase = async (recipeId) => {
         try {
-            // Check if there is a user logged in
             if (!user) {
                 toast.error('Please log in');
                 navigate('/');
                 return;
             }
-            const userResponse = await axios.get(`https://tasty-server.vercel.app/allUsers/${user.email}`);
-            const userData = userResponse.data;
-
+            const { data: userData } = await axios.get(`https://tasty-server.vercel.app/allUsers/${user.email}`);
             if (userData.coin < 10) {
                 toast.error('You need to purchase more coins to buy this recipe');
                 navigate('/purchaseCoin');
                 return;
             }
-            console.log(userData.coin);
+
             const confirmPermission = await Swal.fire({
                 title: 'Confirm Purchase',
                 text: `Are you sure you want to purchase this recipe? It will cost 10 coins.`,
@@ -87,8 +83,8 @@ const AllRecipes = () => {
             });
 
             if (!confirmPermission.isConfirmed) return;
+
             const response = await axios.put(`https://tasty-server.vercel.app/purchase/${recipeId}`, { email: user.email });
-            console.log('Updated data after recipe purchase:', response.data);
             Swal.fire({
                 title: 'Success!',
                 text: 'Recipe purchased successfully',
@@ -103,7 +99,6 @@ const AllRecipes = () => {
             toast.error('Failed to purchase recipe');
         }
     };
-
 
     return (
         <div className="bg-black text-white min-h-screen">
@@ -146,7 +141,7 @@ const AllRecipes = () => {
                         No recipes found
                     </h1>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {recipes.map(recipe => (
                             <div key={recipe._id} className="bg-orange-100 text-gray-800 rounded-lg shadow-lg overflow-hidden transform transition-transform lg:hover:scale-105">
                                 <div className="bg-cover bg-center h-48" style={{ backgroundImage: `url('${recipe.img}')` }}></div>
@@ -159,18 +154,17 @@ const AllRecipes = () => {
                                         {user?.email === recipe?.creatorEmail || recipe?.purchased_by.includes(user?.email) ? (
                                             <Link to={`/recipeDetails/${recipe._id}`} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</Link>
                                         ) : (
-                                            <button onClick={() => handlePurchase(recipe._id)} className="btn btn-sm text-lg bg-orange-300 hover:text-orange-600 hover:bg-black">View The Recipe</button>
+                                            <button onClick={() => handlePurchase(recipe._id)} className="btn btn-sm text-lg bg-red-400 hover:text-orange-600 hover:bg-black">Purchase For View</button>
                                         )}
                                     </div>
                                     <div className="text-sm text-gray-500">
-                                        <p>author : <span className="font-medium">{recipe.creatorEmail}</span></p>
+                                        <p>Author: <span className="font-medium">{recipe.creatorEmail}</span></p>
                                         <div className="flex justify-start items-center space-x-1">
-                                            <p>Purchased By :</p> <span className="font-medium">{recipe.purchased_by.length}</span> <FaUserFriends className="text-lg" />
+                                            <p>Purchased By:</p> <span className="font-medium">{recipe.purchased_by.length}</span> <FaUserFriends className="text-lg" />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         ))}
                     </div>
                 )}

@@ -14,7 +14,6 @@ const AddRecipe = () => {
     const axiosPublic = useAxiosPublic();
     const axiosSecure = useAxiosSecure();
     const onSubmit = async (data) => {
-        console.log(data);
         const imageFile = { image: data.img[0] }
         const res = await axiosPublic.post(image_hosting_api, imageFile, {
             headers: {
@@ -42,7 +41,6 @@ const AddRecipe = () => {
                 toast.error('Failed to add recipe. Please try again.');
             }
         }
-        console.log(res.data);
     }
     return (
         <div className="bg-black text-white min-h-screen">
