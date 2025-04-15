@@ -69,14 +69,6 @@ const DevInfo = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <div className="lg:w-3/4">
-                                <p className="text-lg text-orange-500 font-semibold mb-2">
-                                    Experience : <span className='text-white text-sm font-normal'>{info.experience}</span>
-                                </p>
-                                <p className="text-lg text-orange-500 font-semibold mb-2">
-                                    References : <span className='text-white text-sm font-normal'>{info.references}</span>
-                                </p>
-                            </div>
                         </div>
                     </div>
                 </div>
